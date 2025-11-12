@@ -1,6 +1,14 @@
-fastapi
-uvicorn
-python-dotenv
-huggingface_hub
-pillow
-python-multipart
+# Core Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+
+# Environment & Configuration
+python-dotenv>=1.0.0
+
+# AI & Image Processing
+huggingface_hub>=0.19.0
+pillow>=10.0.0
+
+# File Upload Support
+python-multipart>=0.0.6
