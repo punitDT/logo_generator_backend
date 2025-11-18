@@ -94,32 +94,31 @@ async def generate_logo_endpoint(request: LogoRequest) -> JSONResponse:
     """
     
     try:
-        # Generate logo with all requested sizes
-        result = generate_logo(request.prompt, request.sizes)
-        
+        # Generate logo with all requested sizes (now async)
+        result = await generate_logo(request.prompt, request.sizes)
+
         # Convert all sizes to base64 for JSON response
         images = {}
         for size, image_bytes in result.items():
             images[str(size)] = base64.b64encode(image_bytes).decode('utf-8')
-        
+
         return JSONResponse(
             content={
                 "message": "Logo generated successfully!",
                 "prompt": request.prompt,
                 "images": images,
                 "sizes": request.sizes,
-                "model": Config.MODEL_NAME
+                "model": Config.get_model_identifier()
             },
             status_code=status.HTTP_200_OK
         )
-        
+
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Invalid request: {str(e)}"
         )
     except Exception as e:
-        print(f"❌ Error in generate_logo_endpoint: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate logo: {str(e)}"
