@@ -13,6 +13,8 @@ diffusers>=0.25.0
 transformers>=4.36.0
 accelerate>=0.25.0
 safetensors>=0.4.0
+protobuf>=3.20.0
+sentencepiece>=0.1.99
 
 # Image Processing
 pillow>=10.0.0
@@ -22,6 +24,7 @@ python-multipart>=0.0.6
 
 # HTTP Client (for testing)
 httpx>=0.25.0
+requests>=2.31.0
 
 # Additional utilities
 numpy>=1.24.0

@@ -25,7 +25,8 @@ class Config:
     USE_FP16: bool = os.getenv("USE_FP16", "true").lower() == "true"
 
     # GPU Configuration
-    TORCH_DEVICE: str = os.getenv("TORCH_DEVICE", "cuda")
+    # Auto-detect device: cuda (NVIDIA) > mps (Apple Silicon) > cpu
+    TORCH_DEVICE: str = os.getenv("TORCH_DEVICE", "auto")
     ENABLE_ATTENTION_SLICING: bool = os.getenv("ENABLE_ATTENTION_SLICING", "true").lower() == "true"
     ENABLE_VAE_SLICING: bool = os.getenv("ENABLE_VAE_SLICING", "true").lower() == "true"
 

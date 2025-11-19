@@ -8,16 +8,28 @@ import uvicorn
 from app.config import Config
 
 if __name__ == "__main__":
-    # Check for CUDA availability
+    # Check for GPU availability (CUDA or MPS)
     try:
         import torch
-        if not torch.cuda.is_available():
+
+        # Detect available device
+        if torch.cuda.is_available():
+            device = "cuda"
+            device_name = torch.cuda.get_device_name(0)
+            device_memory = torch.cuda.get_device_properties(0).total_memory / 1e9
+        elif torch.backends.mps.is_available():
+            device = "mps"
+            device_name = "Apple Silicon GPU (MPS)"
+            device_memory = "Shared with system RAM"
+        else:
             print("=" * 60)
-            print("⚠️  WARNING: CUDA is not available!")
-            print("This application requires GPU support to run.")
-            print("Please ensure you are running on a GPU-enabled machine.")
+            print("⚠️  WARNING: No GPU acceleration available!")
+            print("This application requires GPU support (CUDA or MPS) to run efficiently.")
+            print("For Apple Silicon Macs, ensure PyTorch with MPS support is installed.")
+            print("For NVIDIA GPUs, ensure CUDA is properly configured.")
             print("=" * 60)
             sys.exit(1)
+
     except ImportError:
         print("=" * 60)
         print("❌ ERROR: PyTorch is not installed!")
@@ -29,12 +41,15 @@ if __name__ == "__main__":
     is_production = Config.is_production()
 
     print("=" * 60)
-    print("🚀 Starting AI Logo Generator Server (GPU Mode)")
+    print(f"🚀 Starting AI Logo Generator Server ({device.upper()} Mode)")
     print("=" * 60)
     print(f"📍 Host: {Config.HOST}:{Config.PORT}")
     print(f"🤖 Model: {Config.get_model_identifier()}")
-    print(f"🎮 GPU: {torch.cuda.get_device_name(0)}")
-    print(f"💾 GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
+    print(f"🎮 Device: {device_name}")
+    if isinstance(device_memory, float):
+        print(f"💾 GPU Memory: {device_memory:.2f} GB")
+    else:
+        print(f"💾 Memory: {device_memory}")
     print(f"🌍 Environment: {Config.ENVIRONMENT}")
     print(f"⚡ Max Concurrent Jobs: {Config.MAX_CONCURRENT_JOBS}")
     print(f"🎯 FP16: {Config.USE_FP16}")
