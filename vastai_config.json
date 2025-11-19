@@ -1,0 +1,24 @@
+{
+  "instance_id": "28025463",
+  "image_name": "logo-generator-gpu",
+  "container_name": "logo-generator",
+  "app_port": 7860,
+  "github_repo": "https://github.com/punitDT/logo_generator_backend.git",
+  "deployment": {
+    "max_concurrent_jobs": 2,
+    "use_fp16": true,
+    "warmup_enabled": false,
+    "log_level": "INFO",
+    "log_format": "json"
+  },
+  "gpu_requirements": {
+    "min_vram_gb": 24,
+    "recommended_gpus": [
+      "RTX 3090",
+      "RTX 4090",
+      "A6000",
+      "A100"
+    ],
+    "cuda_version": "12.1+"
+  }
+}
